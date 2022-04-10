@@ -1,0 +1,103 @@
+buildscript {
+    ext {
+        springBootVersion = '2.6.1'
+        springKafkaVersion = '2.8.4'
+        spotlessVersion = "6.0.1"
+        dependencyManagementVersion = "1.0.11.RELEASE"
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version "${springBootVersion}"
+    id "com.diffplug.spotless" version "${spotlessVersion}"
+    id 'io.spring.dependency-management' version "${dependencyManagementVersion}"
+}
+
+allprojects {
+    apply plugin: "com.diffplug.spotless"
+
+    spotless {
+        java {
+            importOrder()
+            removeUnusedImports()
+            trimTrailingWhitespace()
+            googleJavaFormat('1.12.0')
+            indentWithTabs(2)
+            endWithNewline()
+            target 'src/*/java/**/*.java'
+        }
+
+        format 'misc', {
+            target '**/*.gradle', '**/*.md', '**/.gitignore'
+            indentWithSpaces()
+            trimTrailingWhitespace()
+            endWithNewline()
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+
+    group = 'com.junsik'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
+    compileJava.options.encoding = 'UTF-8'
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    task initSourceFolders {
+        sourceSets*.java.srcDirs*.each {
+            if (!it.exists()) {
+                it.mkdirs()
+            }
+        }
+        sourceSets*.resources.srcDirs*.each {
+            if (!it.exists()) {
+                it.mkdirs()
+            }
+        }
+    }
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+        implementation 'org.springframework.kafka:spring-kafka:2.8.4'
+
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+
+        runtimeOnly 'com.h2database:h2'
+        runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'org.springframework.kafka:spring-kafka-test'
+    }
+
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
+}

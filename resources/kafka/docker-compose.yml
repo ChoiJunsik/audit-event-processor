@@ -1,0 +1,62 @@
+version: '2'
+
+services:
+
+  #   wurstmeister/zookeeper:3.4.6
+  zookeeper:
+    hostname: zookeeper
+    container_name: zookeeper
+    image: wurstmeister/zookeeper:3.4.6
+    ports:
+      - "2181:2181"
+
+  #   wurstmeister/kafka:2.13-2.8.1 - broker 1
+  kafka1:
+    hostname: kafka1
+    container_name: kafka1
+    image: wurstmeister/kafka:2.13-2.8.1
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_HOST_NAME: kafka1
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.99.251:9092
+      BOOTSTRAP_SERVERS: kafka1:9092, kafka2:9093, kafka3:9094
+      KAFKA_CREATE_TOPICS: "test1:1:1"
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+
+  #   wurstmeister/kafka:2.13-2.8.1 - broker 2
+  kafka2:
+    hostname: kafka2
+    container_name: kafka2
+    image: wurstmeister/kafka:2.13-2.8.1
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_HOST_NAME: kafka2
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.99.251:9093
+      BOOTSTRAP_SERVERS: kafka1:9092, kafka2:9093, kafka3:9094
+      KAFKA_CREATE_TOPICS: "test2:1:1"
+    ports:
+      - "9093:9092"
+    depends_on:
+      - zookeeper
+
+  #   wurstmeister/kafka:2.13-2.8.1 - broker 3
+  kafka3:
+    hostname: kafka3
+    container_name: kafka3
+    image: wurstmeister/kafka:2.13-2.8.1
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_HOST_NAME: kafka3
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.99.251:9094
+      BOOTSTRAP_SERVERS: kafka1:9092, kafka2:9093, kafka3:9094
+      KAFKA_CREATE_TOPICS: "test3:1:1"
+    ports:
+      - "9094:9092"
+    depends_on:
+      - zookeeper
