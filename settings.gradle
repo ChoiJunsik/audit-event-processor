@@ -1,4 +1,6 @@
 rootProject.name = 'audit-event-processor'
 
-include "audit-event-producer"
-include "audit-event-consumer"
+include "audit-event-processor"
+
+include "chat-server"
+include "chat-event-consumer"

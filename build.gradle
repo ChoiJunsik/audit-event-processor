@@ -17,6 +17,7 @@ buildscript {
 
 plugins {
     id 'java'
+    id 'java-library'
     id 'org.springframework.boot' version "${springBootVersion}"
     id "com.diffplug.spotless" version "${spotlessVersion}"
     id 'io.spring.dependency-management' version "${dependencyManagementVersion}"
@@ -58,6 +59,7 @@ subprojects {
     compileJava.options.encoding = 'UTF-8'
 
     apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
 
@@ -81,11 +83,40 @@ subprojects {
     }
 
     dependencies {
+    }
+
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
+}
+
+
+def auditEventProcessorProjects = [project(':audit-event-processor')]
+configure(auditEventProcessorProjects) {
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter'
+
+        api "org.springframework.kafka:spring-kafka:${springKafkaVersion}"
+
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'org.springframework.kafka:spring-kafka-test'
+    }
+}
+
+def sampleChatApplicationProjects = [project(':chat-server'), project(':chat-event-consumer')]
+configure(sampleChatApplicationProjects) {
+
+    dependencies {
+
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-        implementation 'org.springframework.kafka:spring-kafka:2.8.4'
 
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
@@ -94,10 +125,5 @@ subprojects {
         runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
-        testImplementation 'org.springframework.kafka:spring-kafka-test'
-    }
-
-    tasks.named('test') {
-        useJUnitPlatform()
     }
 }

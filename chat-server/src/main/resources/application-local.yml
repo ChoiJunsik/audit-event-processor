@@ -1,0 +1,41 @@
+spring:
+  config:
+    use-legacy-processing: true
+  profiles:
+    include:
+      - audit-event-processor-local
+  datasource:
+    url: jdbc:mysql://localhost:33306/chat?allowPublicKeyRetrieval=true
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: root
+    password: root
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        show-sql: true
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_size: 500
+          fetch_size: 500
+          batch_versioned_data: true
+    open-in-view: false
+    show-sql: true
+  logging:
+    level:
+      org:
+        springframework:
+          web:
+            filter: DEBUG
+  kafka:
+    bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+    consumer:
+      bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+    producer:
+      bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+

@@ -1,0 +1,5 @@
+description = "chat-event-consumer module"
+
+dependencies {
+    api project(":audit-event-processor")
+}

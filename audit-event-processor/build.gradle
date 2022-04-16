@@ -1,0 +1,4 @@
+description = "audit-event-producer module"
+
+dependencies {
+}
