@@ -1,6 +1,6 @@
 package com.junsik.chat.adapter.persistence.audit;
 
-import com.junsik.chat.adapter.consumer.internal.event.AuditEvent;
+import com.junsik.audit.processor.producer.event.internal.InternalAuditEvent;
 import javax.persistence.PostPersist;
 import javax.persistence.PostRemove;
 import javax.persistence.PostUpdate;
@@ -25,6 +25,6 @@ public class AuditingEntityEventListener {
 	@PostRemove
 	@PostPersist
 	void execute(Object entity) {
-		applicationEventPublisher.publishEvent(new AuditEvent(entity));
+		applicationEventPublisher.publishEvent(new InternalAuditEvent(entity));
 	}
 }

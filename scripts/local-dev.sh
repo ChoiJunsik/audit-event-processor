@@ -5,5 +5,7 @@ cd ../resources/local-dev
 docker-compose down
 docker-compose up -d
 
-docker-compose -f ./kafka/docker-compose.yml down
-docker-compose -f ./kafka/docker-compose.yml up -d
+cd ./kafka-cluster
+docker-compose down
+echo "INTERNAL_IP=$(ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}')" > .env
+docker-compose up

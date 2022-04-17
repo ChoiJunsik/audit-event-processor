@@ -1,23 +1,26 @@
-package com.junsik.chat.adapter.consumer.internal.event;
+package com.junsik.audit.entity.producer.event.internal;
 
-import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.event.EventListener;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaProducerException;
 import org.springframework.kafka.core.KafkaSendCallback;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.util.concurrent.ListenableFuture;
 
 @Slf4j
 @Component
 public class InternalAuditEventPublisher {
 
-	private static final String TOPIC_NAME = "audit-chat-event";
-	private static final String MESSAGE_KEY = "chat-server";
+	@Value("${audit-event-processor.topic}")
+	private String TOPIC_NAME;
+	@Value("${audit-event-processor.message-key}")
+	private String MESSAGE_KEY;
 
 	private final KafkaTemplate<String, Object> kafkaTemplate;
 
@@ -28,7 +31,7 @@ public class InternalAuditEventPublisher {
 
 	@Async
 	@Transactional
-	@EventListener
+	@TransactionalEventListener(fallbackExecution = true)
 	public void onAuditEvent(final AuditEvent event) {
 
 		ListenableFuture<SendResult<String, Object>> future =
