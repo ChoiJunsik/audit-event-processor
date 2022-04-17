@@ -1,4 +1,4 @@
-package com.junsik.audit.entity.producer;
+package com.junsik.audit.processor.producer;
 
 import java.util.HashMap;
 import java.util.List;

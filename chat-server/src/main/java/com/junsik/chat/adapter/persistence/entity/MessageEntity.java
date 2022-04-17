@@ -1,7 +1,7 @@
 package com.junsik.chat.adapter.persistence.entity;
 
+import com.junsik.audit.processor.producer.AuditingEntityEventListener;
 import com.junsik.chat.adapter.persistence.audit.AuditEntity;
-import com.junsik.chat.adapter.persistence.audit.AuditingEntityEventListener;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;

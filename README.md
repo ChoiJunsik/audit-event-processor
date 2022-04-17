@@ -9,7 +9,7 @@
   "eventTime": "yyyy-mm-dd hh-mm-ss",
   "service": "MSA Service",
   "auditUser": "User PK",
-  "event": "BREAD (Browse / Read / Edit / Add / Delete)",
+  "eventType": "CUD (CREATED/UPDATED/DELETED)",
   "eventModel": "Domain Entity",
   "eventModelId": "Domain Entity PK",
   "payload": {
@@ -25,7 +25,7 @@
   "eventTime": "1994-12-24 00:00:00",
   "service": "chat-application",
   "auditUser": 0,
-  "event": "ADD",
+  "eventType": "CREATED",
   "eventModel": "Chat",
   "eventModelId": 1,
   "payload": {

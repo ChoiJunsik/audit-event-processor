@@ -1,4 +1,4 @@
-package com.junsik.audit.entity.consumer;
+package com.junsik.audit.processor.consumer;
 
 import java.util.Collection;
 import java.util.HashMap;

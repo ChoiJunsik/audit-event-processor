@@ -1,30 +1,44 @@
-package com.junsik.chat.adapter.persistence.audit;
+package com.junsik.audit.processor.producer;
 
-import com.junsik.audit.processor.producer.event.internal.InternalAuditEvent;
+import com.junsik.audit.processor.vo.AuditEvent;
+import com.junsik.audit.processor.vo.AuditEventType;
 import javax.persistence.PostPersist;
 import javax.persistence.PostRemove;
 import javax.persistence.PostUpdate;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 public class AuditingEntityEventListener {
 
 	private ApplicationEventPublisher applicationEventPublisher;
+	private AuditEventFactory auditEventFactory;
 
-	public AuditingEntityEventListener(ApplicationEventPublisher applicationEventPublisher) {
+	public AuditingEntityEventListener(
+			ApplicationEventPublisher applicationEventPublisher, AuditEventFactory auditEventFactory) {
 
 		this.applicationEventPublisher = applicationEventPublisher;
+		this.auditEventFactory = auditEventFactory;
 	}
 
-	public AuditingEntityEventListener() {}
+	@PostPersist
+	void onPersist(Object entity) {
+		executeByType(AuditEventType.CREATED, entity);
+	}
 
 	@PostUpdate
+	void onUpdate(Object entity) {
+		executeByType(AuditEventType.UPDATED, entity);
+	}
+
 	@PostRemove
-	@PostPersist
-	void execute(Object entity) {
-		applicationEventPublisher.publishEvent(new InternalAuditEvent(entity));
+	void onDelete(Object entity) {
+		executeByType(AuditEventType.DELETED, entity);
+	}
+
+	private void executeByType(AuditEventType type, Object entity) {
+		AuditEvent auditEvent = auditEventFactory.execute(type, entity);
+
+		applicationEventPublisher.publishEvent(auditEvent);
 	}
 }

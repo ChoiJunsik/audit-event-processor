@@ -1,6 +1,6 @@
 package com.junsik.chat;
 
-import com.junsik.audit.entity.producer.AuditEntityProducerConfiguration;
+import com.junsik.audit.processor.producer.AuditEntityProducerConfiguration;
 import java.util.TimeZone;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

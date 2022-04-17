@@ -39,3 +39,7 @@ spring:
     producer:
       bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
 
+audit-event-processor:
+  topic: audit-chat-event
+  message-key: chat-server
+  service: chat-server
