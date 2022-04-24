@@ -1,4 +1,4 @@
-package com.junsik.chat.adapter.persistence.audit;
+package com.junsik.audit.processor.adapter.out.audit;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -21,7 +21,11 @@ public abstract class AuditEntity implements Serializable {
 	@Column(name = "create_date", nullable = false, updatable = false)
 	protected LocalDateTime createDate;
 
+	protected Long createUser = 0L;
+
 	@LastModifiedDate
 	@Column(name = "update_date", nullable = false)
 	protected LocalDateTime updateDate;
+
+	protected Long updateUser = 0L;
 }

@@ -1,6 +1,6 @@
-package com.junsik.audit.processor.producer.event.internal;
+package com.junsik.audit.processor.adapter.out;
 
-import com.junsik.audit.processor.vo.AuditEvent;
+import com.junsik.audit.processor.domain.AuditEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,8 +36,9 @@ public class InternalAuditEventPublisher {
 	@TransactionalEventListener(fallbackExecution = true)
 	public void onAuditEvent(final AuditEvent event) {
 
-		ListenableFuture<SendResult<String, Object>> future =
+		final ListenableFuture<SendResult<String, Object>> future =
 				kafkaTemplate.send(TOPIC_NAME, MESSAGE_KEY, event);
+
 		future.addCallback(
 				new KafkaSendCallback<>() {
 

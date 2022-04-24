@@ -1,4 +1,4 @@
-package com.junsik.chat.adapter.controller.request;
+package com.junsik.chat.adapter.web.request;
 
 import com.junsik.chat.domain.command.CreateMessageCommand;
 import lombok.Getter;
@@ -11,7 +11,7 @@ public class SendMessageRequest {
 	private Long receiverId;
 	private String content;
 
-	public CreateMessageCommand to() {
+	public CreateMessageCommand toCommand() {
 		return CreateMessageCommand.builder()
 				.senderId(this.senderId)
 				.receiverId(this.receiverId)
