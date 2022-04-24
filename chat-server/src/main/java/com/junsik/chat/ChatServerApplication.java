@@ -1,6 +1,6 @@
 package com.junsik.chat;
 
-import com.junsik.audit.processor.producer.AuditEntityProducerConfiguration;
+import com.junsik.audit.processor.AuditEventProcessorConfiguration;
 import java.util.TimeZone;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
 
+@Import(AuditEventProcessorConfiguration.class)
 @EnableJpaAuditing
 @EnableAsync
-@Import({AuditEntityProducerConfiguration.class})
 @SpringBootApplication
 public class ChatServerApplication {
 

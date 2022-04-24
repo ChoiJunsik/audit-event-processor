@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 @Service
-public class CreateMessageService implements CreateMessageUseCase {
+class CreateMessageService implements CreateMessageUseCase {
 
 	private final ChatRepository chatRepository;
 
@@ -21,7 +21,6 @@ public class CreateMessageService implements CreateMessageUseCase {
 		MessageEntity messageEntity =
 				MessageEntity.builder()
 						.receiverId(command.getReceiverId())
-						.createUser(command.getSenderId())
 						.content(command.getContent())
 						.build();
 

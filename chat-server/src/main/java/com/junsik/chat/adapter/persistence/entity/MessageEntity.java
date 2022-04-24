@@ -1,7 +1,7 @@
 package com.junsik.chat.adapter.persistence.entity;
 
-import com.junsik.audit.processor.producer.AuditingEntityEventListener;
-import com.junsik.chat.adapter.persistence.audit.AuditEntity;
+import com.junsik.audit.processor.adapter.out.audit.AuditEntity;
+import com.junsik.audit.processor.adapter.out.persistence.AuditingEntityEventListener;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -26,7 +26,5 @@ public class MessageEntity extends AuditEntity {
 	private Long id;
 
 	private Long receiverId;
-	private Long createUser;
-
 	private String content;
 }
