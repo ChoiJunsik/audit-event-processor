@@ -6,9 +6,9 @@ import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.function.Consumer;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,12 +19,22 @@ public class AuditEventFactory {
 
 	private static final HashMap<String, AuditFieldExtractor<Object, AuditEvent>> extractorHashMap = new HashMap<>();
 
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	private static class ExtractorParams {
+		private Field field;
+		private AuditEvent auditEvent;
+		private AuditEventType type;
+		private Object entity;
+	}
+
 	static {
-		extractorHashMap.put(AuditFields.ID.getField(),
+		extractorHashMap.put(AuditFields.ID.getFieldName(),
 				(o, auditEvent) -> auditEvent.setDomainId((Long) o));
-		extractorHashMap.put(AuditFields.CREATE_USER.getField(),
+		extractorHashMap.put(AuditFields.CREATE_USER.getFieldName(),
 				(o, auditEvent) -> auditEvent.setEventUser((Long) o));
-		extractorHashMap.put(AuditFields.UPDATE_USER.getField(),
+		extractorHashMap.put(AuditFields.UPDATE_USER.getFieldName(),
 				(o, auditEvent) -> auditEvent.setEventUser((Long) o));
 	}
 
@@ -37,41 +47,53 @@ public class AuditEventFactory {
 
 		final Field[] declaredFields = entity.getClass().getDeclaredFields();
 
-		Consumer<Field> doExtractAndFillEvent = field -> {
-			field.setAccessible(true);
-
-			final String fieldName = field.getName();
-
-			if (this.validateBeforeExtract(fieldName, type)) {
-				return;
-			}
-
-			final AuditFieldExtractor<Object, AuditEvent> auditFieldExtractor = extractorHashMap.get(fieldName);
-
-			if (auditFieldExtractor == null) {
-				return;
-			}
-
-			try {
-				auditFieldExtractor.execute(field.get(entity), auditEvent);
-			} catch (IllegalAccessException exception) {
-				log.error("Audit Entity Reflection Exception", exception);
-			}
-		};
-
-		Arrays.stream(declaredFields).forEach(doExtractAndFillEvent);
+		Arrays.stream(declaredFields).forEach(field -> this.doExtractAndFillEvent(
+				ExtractorParams.builder()
+						.auditEvent(auditEvent)
+						.entity(entity)
+						.field(field)
+						.type(type)
+						.build())
+		);
 
 		return auditEvent;
 	}
 
-	private boolean validateBeforeExtract(String fieldName, AuditEventType type) {
-		return type == AuditEventType.UPDATED && AuditFields.CREATE_USER.getField()
-				.equals(fieldName);
+	private void doExtractAndFillEvent(final ExtractorParams params) {
+		final Field field = params.getField();
+
+		field.setAccessible(true);
+
+		final String fieldName = field.getName();
+
+		if (this.validateBy(fieldName, params.getType())) {
+			return;
+		}
+
+		final AuditFieldExtractor<Object, AuditEvent> auditFieldExtractor = extractorHashMap.get(fieldName);
+
+		if (auditFieldExtractor == null) {
+			return;
+		}
+
+		try {
+			auditFieldExtractor.execute(field.get(params.getEntity()), params.getAuditEvent());
+		} catch (IllegalAccessException exception) {
+			log.error("Audit Entity Reflection Exception", exception);
+		}
 	}
 
-	private AuditEvent getInitialAuditEvent(AuditEventType type, Object entity) {
-		return AuditEvent.builder().eventTime(LocalDateTime.now())
-				.domain(entity.getClass().getSimpleName()).service(service).eventType(type)
-				.payload(entity).build();
+	private boolean validateBy(final String fieldName, final AuditEventType type) {
+		return type == AuditEventType.UPDATED && AuditFields.CREATE_USER.getFieldName().equals(fieldName);
+	}
+
+	private AuditEvent getInitialAuditEvent(final AuditEventType type, final Object entity) {
+		return AuditEvent.builder()
+				.eventTime(LocalDateTime.now())
+				.domain(entity.getClass().getSimpleName())
+				.service(service)
+				.eventType(type)
+				.payload(entity)
+				.build();
 	}
 }

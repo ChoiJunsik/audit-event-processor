@@ -18,6 +18,7 @@ public class AuditEvent {
 	private LocalDateTime eventTime;
 	private Long eventUser;
 	private AuditEventType eventType;
+	private boolean published;
 
 	private String domain;
 	private Long domainId;
