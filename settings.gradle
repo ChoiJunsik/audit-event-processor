@@ -1,6 +1,7 @@
 rootProject.name = 'audit-event-processor'
 
+// Main
 include "audit-event-processor"
 
-include "chat-server"
-include "chat-event-consumer"
+// SAMPLE
+include "sample-application"

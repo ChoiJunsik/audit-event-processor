@@ -97,6 +97,7 @@ configure(auditEventProcessorProjects) {
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter'
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
 
         api "org.springframework.kafka:spring-kafka:${springKafkaVersion}"
 
@@ -109,7 +110,7 @@ configure(auditEventProcessorProjects) {
     }
 }
 
-def sampleChatApplicationProjects = [project(':chat-server'), project(':chat-event-consumer')]
+def sampleChatApplicationProjects = [project(':sample-application')]
 configure(sampleChatApplicationProjects) {
 
     dependencies {
