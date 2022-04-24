@@ -5,7 +5,7 @@ spring:
     include:
       - audit-event-processor-local
   datasource:
-    url: jdbc:mysql://localhost:33306/chat?allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:33306/event_store?allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
     driver-class-name: org.mariadb.jdbc.Driver
     username: root
     password: root

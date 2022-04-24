@@ -1,7 +1,8 @@
 package com.junsik.audit.processor.domain;
 
 import com.junsik.audit.processor.domain.enums.AuditEventType;
-import com.junsik.audit.processor.domain.enums.AuditFields;
+import com.junsik.audit.processor.domain.enums.AuditFieldsEnum;
+import com.junsik.audit.processor.domain.enums.EventPublishType;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -30,11 +31,11 @@ public class AuditEventFactory {
 	}
 
 	static {
-		extractorHashMap.put(AuditFields.ID.getFieldName(),
+		extractorHashMap.put(AuditFieldsEnum.ID.getFieldName(),
 				(o, auditEvent) -> auditEvent.setDomainId((Long) o));
-		extractorHashMap.put(AuditFields.CREATE_USER.getFieldName(),
+		extractorHashMap.put(AuditFieldsEnum.CREATE_USER.getFieldName(),
 				(o, auditEvent) -> auditEvent.setEventUser((Long) o));
-		extractorHashMap.put(AuditFields.UPDATE_USER.getFieldName(),
+		extractorHashMap.put(AuditFieldsEnum.UPDATE_USER.getFieldName(),
 				(o, auditEvent) -> auditEvent.setEventUser((Long) o));
 	}
 
@@ -84,15 +85,16 @@ public class AuditEventFactory {
 	}
 
 	private boolean validateBy(final String fieldName, final AuditEventType type) {
-		return type == AuditEventType.UPDATED && AuditFields.CREATE_USER.getFieldName().equals(fieldName);
+		return type == AuditEventType.UPDATED && AuditFieldsEnum.CREATE_USER.getFieldName().equals(fieldName);
 	}
 
 	private AuditEvent getInitialAuditEvent(final AuditEventType type, final Object entity) {
 		return AuditEvent.builder()
 				.eventTime(LocalDateTime.now())
+				.eventType(type)
+				.publishType(EventPublishType.IMMEDIATELY)
 				.domain(entity.getClass().getSimpleName())
 				.service(service)
-				.eventType(type)
 				.payload(entity)
 				.build();
 	}

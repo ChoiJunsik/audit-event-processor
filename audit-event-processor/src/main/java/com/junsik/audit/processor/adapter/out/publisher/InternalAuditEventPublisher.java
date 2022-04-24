@@ -1,4 +1,4 @@
-package com.junsik.audit.processor.adapter.out;
+package com.junsik.audit.processor.adapter.out.publisher;
 
 import com.junsik.audit.processor.domain.AuditEvent;
 import lombok.extern.slf4j.Slf4j;
