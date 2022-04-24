@@ -1,6 +1,7 @@
 package com.junsik.audit.processor.domain;
 
 import com.junsik.audit.processor.domain.enums.AuditEventType;
+import com.junsik.audit.processor.domain.enums.EventPublishType;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,7 @@ public class AuditEvent {
 	private LocalDateTime eventTime;
 	private Long eventUser;
 	private AuditEventType eventType;
-	private boolean published;
+	private EventPublishType publishType;
 
 	private String domain;
 	private Long domainId;
