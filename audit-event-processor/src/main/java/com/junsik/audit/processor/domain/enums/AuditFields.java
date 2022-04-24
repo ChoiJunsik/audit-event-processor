@@ -8,9 +8,9 @@ public enum AuditFields {
 	CREATE_USER("createUser"),
 	UPDATE_USER("updateUser");
 
-	private final String field;
+	private final String fieldName;
 
-	AuditFields(String field) {
-		this.field = field;
+	AuditFields(String fieldName) {
+		this.fieldName = fieldName;
 	}
 }

@@ -1,4 +1,4 @@
-package com.junsik.audit.processor.adapter.out.audit;
+package com.junsik.audit.processor.adapter.out.persistence.audit;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

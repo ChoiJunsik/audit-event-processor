@@ -1,6 +1,6 @@
 package com.junsik.chat.adapter.persistence.entity;
 
-import com.junsik.audit.processor.adapter.out.audit.AuditEntity;
+import com.junsik.audit.processor.adapter.out.persistence.audit.AuditEntity;
 import com.junsik.audit.processor.adapter.out.persistence.AuditingEntityEventListener;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
